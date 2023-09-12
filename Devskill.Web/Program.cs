@@ -1,3 +1,5 @@
+using Autofac.Extensions.DependencyInjection;
+using Autofac;
 using Devskill.Web.Data;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -15,6 +17,13 @@ builder.Host.UseSerilog((ctx, lc) => lc
 
 try
 {
+    builder.Host.UseServiceProviderFactory(new AutofacServiceProviderFactory());
+    builder.Host.ConfigureContainer<ContainerBuilder>(containerBuilder =>
+    {
+        //Module Class Binding Here
+    });
+
+
     // Add services to the container.
     var connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("Connection string 'DefaultConnection' not found.");
     builder.Services.AddDbContext<ApplicationDbContext>(options =>
